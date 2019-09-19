@@ -35,6 +35,8 @@ def cliHandler(args):
             exit('Training finished, exit.')
 
     if FLAGS.savepb:
+        FLAGS.load = -1
+        tfnet = TFNet(FLAGS)
         print('Rebuild a constant version ...')
         tfnet.savepb(); exit('Done')
 
