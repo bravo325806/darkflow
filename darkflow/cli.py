@@ -1,6 +1,7 @@
 from .defaults import argHandler #Import the default arguments
 import os
 from .net.build import TFNet
+#from mAP import mAP
 
 def cliHandler(args):
     FLAGS = argHandler()
@@ -24,7 +25,7 @@ def cliHandler(args):
     except: pass
 
     tfnet = TFNet(FLAGS)
-    
+    print(FLAGS.load) 
     if FLAGS.demo:
         tfnet.camera()
         exit('Demo stopped, exit.')
@@ -32,12 +33,15 @@ def cliHandler(args):
     if FLAGS.train:
         print('Enter training ...'); tfnet.train()
         if not FLAGS.savepb: 
-            exit('Training finished, exit.')
+            print('Training finished, exit.')
 
     if FLAGS.savepb:
-        FLAGS.load = -1
-        tfnet = TFNet(FLAGS)
         print('Rebuild a constant version ...')
-        tfnet.savepb(); exit('Done')
+        tfnet.savepb()
+        print('save Done')
 
-    tfnet.predict()
+    if FLAGS.test:        
+        mAP = tfnet.test()
+        print(mAP)
+        print('Done')
+#tfnet.predict()

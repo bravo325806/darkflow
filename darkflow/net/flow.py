@@ -146,3 +146,58 @@ def predict(self):
         # Timing
         self.say('Total time = {}s / {} inps = {} ips'.format(
             last, len(inp_feed), len(inp_feed) / last))
+
+import cv2
+from .mAP import define_roc 
+from .mAP import read_xml
+from .mAP import box_iou
+
+def test(self):
+    recall = define_roc(self.FLAGS.labels, list())
+    precision = define_roc(self.FLAGS.labels, list())
+    TP = define_roc(self.FLAGS.labels, 0)
+    FP = define_roc(self.FLAGS.labels, 0)
+    FN = define_roc(self.FLAGS.labels, 0)
+    for root, dirs, files, in os.walk(self.FLAGS.testXml):
+        for file in files:
+            ground_truth = read_xml(root+'/'+file)
+            path = self.FLAGS.testImg+ground_truth['identify']+'.jpg'
+            image = cv2.imread(path)
+            results = self.return_predict(image)
+            for box in ground_truth['object']:
+                predict = False
+                for result in results:
+                    if result['label'] == box['name']:
+                        if predict==False:
+                            ax = box['xmin'] + int((box['xmax'] - box['xmin']) / 2)
+                            ay = box['ymin'] + int((box['ymax'] - box['ymin']) / 2)
+                            aw = box['xmax'] - box['xmin']
+                            ah = box['ymax'] - box['ymin']
+                            bx = result['topleft']['x'] + int((result['bottomright']['x'] - result['topleft']['x']) / 2)
+                            by = result['topleft']['y'] + int((result['bottomright']['y'] - result['topleft']['y']) / 2)
+                            bw = result['bottomright']['x'] -  result['topleft']['x']
+                            bh = result['bottomright']['y'] -  result['topleft']['y']
+                            iou = box_iou(ax,ay,aw,ah,bx,by,bw,bh)
+                            #print(ax,ay,aw,ah,bx,by,bw,bh,iou)
+                            if iou >=0.4:
+                                TP[box['name']] += 1
+                                r = 0 if TP[box['name']] + FP[box['name']]==0 else TP[box['name']] / (TP[box['name']] + FP[box['name']])
+                                p = 0 if TP[box['name']] + FN[box['name']]==0 else TP[box['name']] / (TP[box['name']] + FN[box['name']])
+                                recall[box['name']].append(r)
+                                precision[box['name']].append(p)
+                                predict=True
+                            else:
+                                FP[box['name']] += 1
+                                r = 0 if TP[box['name']] + FP[box['name']]==0 else TP[box['name']] / (TP[box['name']] + FP[box['name']])
+                                p = 0 if TP[box['name']] + FN[box['name']]==0 else TP[box['name']] / (TP[box['name']] + FN[box['name']])
+                                recall[box['name']].append(r)
+                                precision[box['name']].append(p)
+                if predict == False:
+                    FN[box['name']] += 1
+                    r = 0 if TP[box['name']] + FP[box['name']]==0 else TP[box['name']] / (TP[box['name']] + FP[box['name']])
+                    p = 0 if TP[box['name']] + FN[box['name']]==0 else TP[box['name']] / (TP[box['name']] + FN[box['name']])
+                    recall[box['name']].append(r)
+                    precision[box['name']].append(p)
+    ap = {'reader box': np.mean(precision['reader box']), 'entry box':np.mean(precision['entry box'])}
+    mAP = (ap['reader box'] + ap['entry box'])/2
+    return mAP

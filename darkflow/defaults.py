@@ -27,7 +27,7 @@ class argHandler(dict):
         self.define('lr', 1e-5, 'learning rate')
         self.define('keep',20,'Number of most recent training results to save')
         self.define('batch', 16, 'batch size')
-        self.define('epoch', 1000, 'number of epoch')
+        self.define('epoch', 40, 'number of epoch')
         self.define('save', 2000, 'save checkpoint every ? training examples')
         self.define('demo', '', 'demo on webcam')
         self.define('queue', 1, 'process demo in batch')
@@ -35,6 +35,9 @@ class argHandler(dict):
         self.define('saveVideo', False, 'Records video from input video or camera')
         self.define('pbLoad', '', 'path to .pb protobuf file (metaLoad must also be specified)')
         self.define('metaLoad', '', 'path to .meta file generated during --savepb that corresponds to .pb file')
+        self.define('test', False, 'calculate map')
+        self.define('testImg', '/home/ubuntu/project/object_detection/council/image/', 'map img')
+        self.define('testXml', '/home/ubuntu/project/object_detection/council/xml', 'map xml')
 
     def define(self, argName, default, description):
         self[argName] = default
