@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:latest-gpu-py3
+FROM tensorflow/tensorflow:1.14.0-gpu-py3
 
 WORKDIR /
 
@@ -7,7 +7,7 @@ RUN git clone https://github.com/bravo325806/darkflow
 
 WORKDIR /darkflow
 
-RUN pip install Cython opencv-python
+RUN pip install Cython opencv-python bs4
 RUN pip install -e .
 
 VOLUME /dataset
