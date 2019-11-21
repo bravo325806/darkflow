@@ -41,7 +41,7 @@ def box_iou(ax, ay, aw, ah, bx, by, bw, bh):
 
 def load_labels(path):
     labels = []
-    with open('labels.txt') as f:
+    with open(path) as f:
         for i in f.readlines(): # 讀取檔案的每一行資料
             labels.append(i.replace("\n", "")) # 新增類別
     return labels

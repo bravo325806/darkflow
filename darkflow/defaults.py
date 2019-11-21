@@ -38,6 +38,7 @@ class argHandler(dict):
         self.define('test', False, 'calculate map')
         self.define('testImg', '/home/ubuntu/project/object_detection/council/image/', 'map img')
         self.define('testXml', '/home/ubuntu/project/object_detection/council/xml', 'map xml')
+        self.define('testThreshold', 0.4, 'mAPThreshold')
 
     def define(self, argName, default, description):
         self[argName] = default

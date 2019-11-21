@@ -13,4 +13,4 @@ RUN pip install -e .
 VOLUME /dataset
 VOLUME /darkflow/built_graph
 
-ENTRYPOINT flow --model /darkflow/cfg/tiny-yolo-voc-3c.cfg --train --dataset "/dataset/img" --annotation "/dataset/labels" --gpu 1.0 --savepb
+CMD python3 train

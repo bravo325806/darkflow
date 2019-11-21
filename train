@@ -1,11 +1,12 @@
 #! /usr/bin/env python
-
+import os
+import json
 import sys
 from darkflow.cli import cliHandler
 
-x = ['/home/ubuntu/.local/bin/flow', '--model', 'cfg/tiny-yolo-box3.cfg', '--load', 'bin/tiny-yolo-voc.weights', '--train', '--dataset', '../council/image', '--annotation', '../council/xml', '--gpu', '1.0', '--savepb', '--test', '--testImg', '/home/ubuntu/project/object_detection/council/image/',  '--testXml', '/home/ubuntu/project/object_detection/council/xml', '--threshold', '0.1']
+with open('parameter/parameter.json') as json_file:
+    data = json.load(json_file)
+x = ['/home/ubuntu/.local/bin/flow','--model', data['model'],  '--load', data['load'], '--train', data['train'], '--dataset', data['dataset'], '--annotation', data['annotation'], '--gpu', data['gpu'], '--savepb', data['savepb'],'--test', data['test'],'--testImg', data['testImg'],  '--testXml', data['testXml'], '--threshold', data['threshold'], '--epoch', data['epoch'], '--labels', data['labels'], '--testThreshold', data['testThreshold']]
 cliHandler(x)
-#x = ['/home/ubuntu/.local/bin/flow', '--pbLoad', 'built_graph/tiny-yolo-box3.pb', '--metaLoad', 'built_graph/tiny-yolo-box3.meta', '--test', '--testImg', '/home/ubuntu/project/object_detection/council/image/',  '--testXml', '/home/ubuntu/project/object_detection/council/xml', '--threshold', '0.1', '--gpu', '1.0']
 #cliHandler(x)
-print('ok')
 #cliHandler(sys.argv)

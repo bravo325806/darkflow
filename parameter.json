@@ -1,0 +1,2 @@
+{'model':'cfg/tiny-yolo-box3.cfg', 
+ 'load', 'bin/tiny-yolo-voc.weights', '--train':, '--dataset', '../council/image', '--annotation', '../council/xml', '--gpu', '1.0', '--savepb', '--test', '--testImg', '/home/ubuntu/project/object_detection/council/image/',  '--testXml', '/home/ubuntu/project/object_detection/council/xml', '--threshold', '0.1'
