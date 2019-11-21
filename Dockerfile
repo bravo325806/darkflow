@@ -12,5 +12,6 @@ RUN pip install -e .
 
 VOLUME /dataset
 VOLUME /darkflow/built_graph
+VOLUME /darkflow/parameter
 
-CMD python3 train
+CMD nohup python3 train
