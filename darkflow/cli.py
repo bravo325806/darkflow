@@ -4,6 +4,7 @@ import zipfile
 import time
 from .net.build import TFNet
 from shutil import copyfile
+from shutil import move
 
 def cliHandler(args):
     FLAGS = argHandler()
@@ -49,8 +50,10 @@ def cliHandler(args):
                 files = os.listdir('built_graph')
                 for file in files:
                     file_type = file.split('.')[-1]
+                    if file_type == 'zip': continue
                     os.rename('built_graph/'+file, 'built_graph/model.'+file_type)
                 copyfile('parameter/labels.txt', 'built_graph/labels.txt')
+                
                 name = FLAGS.model.split('/')[-1][:-4] + '-'+ timestamp + '.zip'
                 z = zipfile.ZipFile('built_graph/'+ name, 'w', zipfile.ZIP_DEFLATED)
                 z.write('built_graph/model.meta')
@@ -65,5 +68,5 @@ def cliHandler(args):
                 print('Test Fail', 'mAP: ', mAP)
             print('Done')
         finally:
-            os.rename('nohup.out', 'parameter/logs/'+timestamp+'.txt')
+            move('nohup.out', 'parameter/logs/'+timestamp+'.txt')
 #tfnet.predict()
